@@ -1,0 +1,159 @@
+@startuml
+
+!theme plain
+left to right direction
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+skinparam package {
+    BackgroundColor<<domain>>     #FFF9C4
+    BorderColor<<domain>>         #F9A825
+    BackgroundColor<<repository>> #E3F2FD
+    BorderColor<<repository>>     #1565C0
+    BackgroundColor<<service>>    #E8F5E9
+    BorderColor<<service>>        #2E7D32
+    BackgroundColor<<ui>>         #FCE4EC
+    BorderColor<<ui>>             #AD1457
+    BackgroundColor<<util>>       #F3E5F5
+    BorderColor<<util>>           #6A1B9A
+    BackgroundColor<<validator>>  #FBE9E7
+    BorderColor<<validator>>      #BF360C
+}
+
+' ─── DOMAIN ───────────────────────────────────────────────
+package "Domain" <<domain>> {
+    class Product {
+        - id: int
+        - nume: String
+        - pret: double
+        - categorie: String
+        - tip: String
+    }
+    class Order {
+        - id: int
+        - totalPrice: double
+    }
+    class OrderItem {
+        - quantity: int
+    }
+    class Reteta {
+        - id: int
+    }
+    class IngredientReteta {
+        - denumire: String
+        - cantitate: double
+    }
+    class Stoc {
+        - id: int
+        - ingredient: String
+        - cantitate: double
+        - stocMinim: double
+    }
+}
+
+' ─── REPOSITORY ───────────────────────────────────────────
+package "Repository" <<repository>> {
+    interface Repository<ID, E> << interface >>
+    class AbstractRepository<ID, E>
+    class FileAbstractRepository<ID, E>
+    class FileProductRepository
+    class FileOrderRepository
+    class FileRetetaRepository
+    class FileStocRepository
+}
+
+' ─── SERVICE ──────────────────────────────────────────────
+package "Service" <<service>> {
+    class DrinkShopService
+    class ProductService
+    class OrderService
+    class RetetaService
+    class StocService
+    class DailyReportService
+}
+
+' ─── VALIDATOR ────────────────────────────────────────────
+package "Validator" <<validator>> {
+    interface Validator<T> << interface >>
+    class ValidationException
+    class ProductValidator
+    class OrderValidator
+    class OrderItemValidator
+    class RetetaValidator
+    class StocValidator
+}
+
+' ─── UI ───────────────────────────────────────────────────
+package "UI" <<ui>> {
+    class DrinkShopApp
+    class DrinkShopController
+}
+
+' ─── UTILITIES ────────────────────────────────────────────
+package "Utilities" <<util>> {
+    class CsvExporter
+    class ReceiptGenerator
+}
+
+' ─── TEST ─────────────────────────────────────────────────
+package "Test" {
+    class ProductTest
+}
+
+' ══════════════════════════════════════════════════════════
+' RELATIONS
+' ══════════════════════════════════════════════════════════
+
+' Domain
+Order                  "1" *--> "items *"        OrderItem
+OrderItem              "1" *--> "product 1"       Product
+Reteta                 "1" *--> "ingrediente *"   IngredientReteta
+
+' Repository hierarchy
+AbstractRepository      --|>  Repository
+FileAbstractRepository  --|>  AbstractRepository
+FileProductRepository   --|>  FileAbstractRepository
+FileOrderRepository     --|>  FileAbstractRepository
+FileRetetaRepository    --|>  FileAbstractRepository
+FileStocRepository      --|>  FileAbstractRepository
+FileOrderRepository    "1" *--> "productRepository 1" Repository
+
+' Service -> Repository
+DrinkShopService       "1" *--> "productService 1"  ProductService
+DrinkShopService       "1" *--> "orderService 1"    OrderService
+DrinkShopService       "1" *--> "retetaService 1"   RetetaService
+DrinkShopService       "1" *--> "stocService 1"     StocService
+DrinkShopService       "1" *--> "report 1"          DailyReportService
+ProductService         "1" *--> "productRepo 1"     Repository
+OrderService           "1" *--> "orderRepo 1"       Repository
+RetetaService          "1" *--> "retetaRepo 1"      Repository
+StocService            "1" *--> "stocRepo 1"        Repository
+DailyReportService     "1" *--> "repo 1"            Repository
+
+' Service -> Validator
+ProductService         "1" *--> "validator 1"  ProductValidator
+OrderService           "1" *--> "validator 1"  OrderValidator
+RetetaService          "1" *--> "validator 1"  RetetaValidator
+StocService            "1" *--> "validator 1"  StocValidator
+
+' Validator hierarchy
+ProductValidator    --|>  Validator
+OrderValidator      --|>  Validator
+OrderItemValidator  --|>  Validator
+RetetaValidator     --|>  Validator
+StocValidator       --|>  Validator
+OrderValidator     "1" *--> "itemValidator 1"  OrderItemValidator
+
+' UI
+DrinkShopController "1" *--> "service 1"             DrinkShopService
+DrinkShopController "1" *--> "currentOrder 1"        Order
+DrinkShopController "1" *--> "currentOrderItems *"   OrderItem
+DrinkShopController "1" *--> "productList *"         Product
+DrinkShopController "1" *--> "retetaList *"          Reteta
+DrinkShopController "1" *--> "newRetetaList *"       IngredientReteta
+
+' Test
+ProductTest "1" *--> "product 1" Product
+
+@enduml
