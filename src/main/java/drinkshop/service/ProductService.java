@@ -2,6 +2,7 @@ package drinkshop.service;
 
 import drinkshop.domain.*;
 import drinkshop.repository.Repository;
+import drinkshop.service.validator.ProductValidator;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,17 +10,20 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final Repository<Integer, Product> productRepo;
+    private final ProductValidator validator = new ProductValidator();
 
     public ProductService(Repository<Integer, Product> productRepo) {
         this.productRepo = productRepo;
     }
 
     public void addProduct(Product p) {
+        validator.validate(p);
         productRepo.save(p);
     }
 
-    public void updateProduct(int id, String name, double price, CategorieBautura categorie, TipBautura tip) {
+    public void updateProduct(int id, String name, double price, String categorie, String tip) {
         Product updated = new Product(id, name, price, categorie, tip);
+        validator.validate(updated);
         productRepo.update(updated);
     }
 
@@ -42,17 +46,17 @@ public class ProductService {
         return productRepo.findOne(id);
     }
 
-    public List<Product> filterByCategorie(CategorieBautura categorie) {
-        if (categorie == CategorieBautura.ALL) return getAllProducts();
+    public List<Product> filterByCategorie(String categorie) {
+        if (CategorieBautura.ALL.equals(categorie)) return getAllProducts();
         return getAllProducts().stream()
-                .filter(p -> p.getCategorie() == categorie)
+                .filter(p -> p.getCategorie().equals(categorie))
                 .collect(Collectors.toList());
     }
 
-    public List<Product> filterByTip(TipBautura tip) {
-        if (tip == TipBautura.ALL) return getAllProducts();
+    public List<Product> filterByTip(String tip) {
+        if (TipBautura.ALL.equals(tip)) return getAllProducts();
         return getAllProducts().stream()
-                .filter(p -> p.getTip() == tip)
+                .filter(p -> p.getTip().equals(tip))
                 .collect(Collectors.toList());
     }
 }

@@ -21,11 +21,11 @@ public class DrinkShopController {
     @FXML private TableColumn<Product, Integer> colProdId;
     @FXML private TableColumn<Product, String> colProdName;
     @FXML private TableColumn<Product, Double> colProdPrice;
-    @FXML private TableColumn<Product, CategorieBautura> colProdCategorie;
-    @FXML private TableColumn<Product, TipBautura> colProdTip;
+    @FXML private TableColumn<Product, String> colProdCategorie;
+    @FXML private TableColumn<Product, String> colProdTip;
     @FXML private TextField txtProdName, txtProdPrice;
-    @FXML private ComboBox<CategorieBautura> comboProdCategorie;
-    @FXML private ComboBox<TipBautura> comboProdTip;
+    @FXML private ComboBox<String> comboProdCategorie;
+    @FXML private ComboBox<String> comboProdTip;
 
     // ---------- RETETE ----------
     @FXML private TableView<Reteta> retetaTable;

@@ -34,7 +34,7 @@ public class DrinkShopService {
         productService.addProduct(p);
     }
 
-    public void updateProduct(int id, String name, double price, CategorieBautura categorie, TipBautura tip) {
+    public void updateProduct(int id, String name, double price, String categorie, String tip) {
         productService.updateProduct(id, name, price, categorie, tip);
     }
 
@@ -46,11 +46,11 @@ public class DrinkShopService {
         return productService.getAllProducts();
     }
 
-    public List<Product> filtreazaDupaCategorie(CategorieBautura categorie) {
+    public List<Product> filtreazaDupaCategorie(String categorie) {
         return productService.filterByCategorie(categorie);
     }
 
-    public List<Product> filtreazaDupaTip(TipBautura tip) {
+    public List<Product> filtreazaDupaTip(String tip) {
         return productService.filterByTip(tip);
     }
 
