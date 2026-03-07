@@ -46,7 +46,11 @@ public class OrderService {
 
     public double computeTotal(Order o) {
         return o.getItems().stream()
-                .mapToDouble(i -> productRepo.findOne(i.getProduct().getId()).getPret() * i.getQuantity())
+                .mapToDouble(i -> {
+                    Product product = productRepo.findOne(i.getProduct().getId());
+                    if (product == null) return 0.0;
+                    return product.getPret() * i.getQuantity();
+                })
                 .sum();
     }
 

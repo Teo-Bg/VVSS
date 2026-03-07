@@ -1,4 +1,0 @@
---patch-module
-drinkshop=_
---add-reads
-drinkshop=ALL-UNNAMED

@@ -11,8 +11,14 @@ public class ReceiptGenerator {
         StringBuilder sb = new StringBuilder();
         sb.append("===== BON FISCAL =====\n").append("Comanda #").append(o.getId()).append("\n");
         for (OrderItem i : o.getItems()) {
-            Product p = products.stream().filter((p1)->i.getProduct().getId()==p1.getId()).toList().get(0);
-            sb.append(p.getNume()+": ").append(p.getPret()).append(" x ").append(i.getQuantity()).append(" = ").append(i.getTotal()).append(" RON\n");
+            Product p = products.stream()
+                    .filter(prod -> i.getProduct().getId() == prod.getId())
+                    .findFirst()
+                    .orElse(null);
+            if (p == null) continue;
+            sb.append(p.getNume()).append(": ").append(p.getPret())
+              .append(" x ").append(i.getQuantity())
+              .append(" = ").append(i.getTotal()).append(" RON\n");
         }
         sb.append("---------------------\nTOTAL: ").append(o.getTotalPrice()).append(" RON\n=====================\n");
         return sb.toString();

@@ -1,5 +1,6 @@
 package drinkshop.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,11 +14,20 @@ public class TipBautura {
     public static final String POWDER        = "POWDER";
     public static final String ALL           = "ALL";
 
+    private static final List<String> VALUES = new ArrayList<>(Arrays.asList(
+            BASIC, DAIRY, LACTOSE_FREE, WATER_BASED, PLANT_BASED, POWDER, ALL
+    ));
+
     public static List<String> values() {
-        return Arrays.asList(
-                BASIC, DAIRY, LACTOSE_FREE, WATER_BASED, PLANT_BASED, POWDER, ALL
-        );
+        return VALUES;
+    }
+
+    public static void addValue(String value) {
+        if (value != null && !value.isBlank() && !VALUES.contains(value)) {
+            VALUES.add(VALUES.size() - 1, value); // insert before ALL
+        }
     }
 
     private TipBautura() {}
 }
+

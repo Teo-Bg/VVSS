@@ -44,10 +44,18 @@
                         <VBox>
                             <Label text="Categorie"/>
                             <ComboBox fx:id="comboProdCategorie"/>
+                            <HBox spacing="4">
+                                <TextField fx:id="txtNewCategorie" promptText="Categorie nouă" prefWidth="140"/>
+                                <Button text="+ Adaugă" onAction="#onAddCategorie"/>
+                            </HBox>
                         </VBox>
                         <VBox>
                             <Label text="Tip Bautura"/>
                             <ComboBox fx:id="comboProdTip"/>
+                            <HBox spacing="4">
+                                <TextField fx:id="txtNewTip" promptText="Tip nou" prefWidth="140"/>
+                                <Button text="+ Adaugă" onAction="#onAddTip"/>
+                            </HBox>
                         </VBox>
                     </HBox>
 

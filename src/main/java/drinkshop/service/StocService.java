@@ -38,9 +38,9 @@ public class StocService {
     public boolean areSuficient(Reteta reteta) {
         List<IngredientReteta> ingredienteNecesare = reteta.getIngrediente();
 
-        for (IngredientReteta e : ingredienteNecesare) {
-            String ingredient = e.getDenumire();
-            double necesar = e.getCantitate();
+        for (IngredientReteta ingredientEntry : ingredienteNecesare) {
+            String ingredient = ingredientEntry.getDenumire();
+            double necesar = ingredientEntry.getCantitate();
 
             double disponibil = stocRepo.findAll().stream()
                     .filter(s -> s.getIngredient().equalsIgnoreCase(ingredient))
@@ -59,9 +59,9 @@ public class StocService {
             throw new IllegalStateException("Stoc insuficient pentru rețeta.");
         }
 
-        for (IngredientReteta e : reteta.getIngrediente()) {
-            String ingredient = e.getDenumire();
-            double necesar = e.getCantitate();
+        for (IngredientReteta ingredientEntry : reteta.getIngrediente()) {
+            String ingredient = ingredientEntry.getDenumire();
+            double necesar = ingredientEntry.getCantitate();
 
             List<Stoc> ingredienteStoc = stocRepo.findAll().stream()
                     .filter(s -> s.getIngredient().equalsIgnoreCase(ingredient))
@@ -73,7 +73,7 @@ public class StocService {
                 if (ramas <= 0) break;
 
                 double deScazut = Math.min(s.getCantitate(), ramas);
-                s.setCantitate((int)(s.getCantitate() - deScazut));
+                s.setCantitate(s.getCantitate() - deScazut);
                 ramas -= deScazut;
 
                 stocRepo.update(s);
