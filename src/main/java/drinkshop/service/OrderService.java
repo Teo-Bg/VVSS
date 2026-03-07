@@ -27,7 +27,7 @@ public class OrderService {
 
     public void updateOrder(Order o) {
         validator.validate(o);
-        orderRepo.update(o);
+        orderRepo.save(o);
     }
 
     public void deleteOrder(int id) {
@@ -56,11 +56,11 @@ public class OrderService {
 
     public void addItem(Order o, OrderItem item) {
         o.getItems().add(item);
-        orderRepo.update(o);
+        orderRepo.save(o);
     }
 
     public void removeItem(Order o, OrderItem item) {
         o.getItems().remove(item);
-        orderRepo.update(o);
+        orderRepo.save(o);
     }
 }

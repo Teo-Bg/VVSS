@@ -12,5 +12,5 @@ public interface Repository<ID, E> {
 
     E delete(ID id);
 
-    E update(E entity);
+
 }

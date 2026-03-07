@@ -24,7 +24,7 @@ public class ProductService {
     public void updateProduct(int id, String name, double price, String categorie, String tip) {
         Product updated = new Product(id, name, price, categorie, tip);
         validator.validate(updated);
-        productRepo.update(updated);
+        productRepo.save(updated);
     }
 
     public void deleteProduct(int id) {

@@ -28,7 +28,7 @@ public class StocService {
 
     public void update(Stoc s) {
         validator.validate(s);
-        stocRepo.update(s);
+        stocRepo.save(s);
     }
 
     public void delete(int id) {
@@ -76,7 +76,7 @@ public class StocService {
                 s.setCantitate(s.getCantitate() - deScazut);
                 ramas -= deScazut;
 
-                stocRepo.update(s);
+                stocRepo.save(s);
             }
         }
     }

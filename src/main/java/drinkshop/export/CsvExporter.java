@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class CsvExporter {
+
+    private CsvExporter() {}
     public static void exportOrders(List<Product> products, List<Order> orders, String path) {
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
         // Write main orders CSV (valid tabular format)

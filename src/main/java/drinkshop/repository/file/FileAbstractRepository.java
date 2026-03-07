@@ -12,7 +12,7 @@ public abstract class FileAbstractRepository<ID, E>
 
     protected String fileName;
 
-    public FileAbstractRepository(String fileName) {
+    protected FileAbstractRepository(String fileName) {
         this.fileName = fileName;
         //loadFromFile();
     }
@@ -65,13 +65,6 @@ public abstract class FileAbstractRepository<ID, E>
     @Override
     public E delete(ID id) {
         E e = super.delete(id);
-        writeToFile();
-        return e;
-    }
-
-    @Override
-    public E update(E entity) {
-        E e = super.update(entity);
         writeToFile();
         return e;
     }

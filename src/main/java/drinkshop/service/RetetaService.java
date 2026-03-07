@@ -22,7 +22,7 @@ public class RetetaService {
 
     public void updateReteta(Reteta r) {
         validator.validate(r);
-        retetaRepo.update(r);
+        retetaRepo.save(r);
     }
 
     public void deleteReteta(int id) {

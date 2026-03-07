@@ -33,11 +33,6 @@ public abstract class AbstractRepository<ID, E>
         return entities.remove(id);
     }
 
-    @Override
-    public E update(E entity) {
-        entities.put(getId(entity), entity);
-        return entity;
-    }
 
     protected abstract ID getId(E entity);
 }
