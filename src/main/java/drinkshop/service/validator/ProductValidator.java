@@ -6,19 +6,20 @@ public class ProductValidator implements Validator<Product> {
 
     @Override
     public void validate(Product product) {
-
-        String errors = "";
+        StringBuilder errors = new StringBuilder();
 
         if (product.getId() <= 0)
-            errors += "ID invalid!\n";
+            errors.append("ID invalid!\n");
 
         if (product.getNume() == null || product.getNume().isBlank())
-            errors += "Numele nu poate fi gol!\n";
+            errors.append("Numele nu poate fi gol!\n");
 
         if (product.getPret() <= 0)
-            errors += "Pret invalid!\n";
+            errors.append("Pret invalid!\n");
 
-        if (!errors.isEmpty())
-            throw new ValidationException(errors);
+        if (errors.length() > 0)
+            throw new ValidationException(errors.toString());
     }
 }
+
+
