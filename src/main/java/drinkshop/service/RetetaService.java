@@ -16,13 +16,21 @@ public class RetetaService {
     }
 
     public void addReteta(Reteta r) {
-        validator.validate(r);
-        retetaRepo.save(r);
+        save(r);
     }
 
     public void updateReteta(Reteta r) {
-        validator.validate(r);
-        retetaRepo.save(r);
+        save(r);
+    }
+
+    /**
+     * Metoda unificată de salvare (insert/update) pentru rețete
+     * @param reteta rețeta de salvat
+     * @throws ValidationException dacă validarea eșuează
+     */
+    public void save(Reteta reteta) {
+        validator.validate(reteta);
+        retetaRepo.save(reteta);
     }
 
     public void deleteReteta(int id) {
