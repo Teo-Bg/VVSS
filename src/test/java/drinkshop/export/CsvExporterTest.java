@@ -43,7 +43,7 @@ class CsvExporterTest {
     // ========== PATH F02_P01: IOException at first FileWriter ==========
     @Test
     @DisplayName("TC_02 - F02_P01: IOException - Invalid path should throw RuntimeException")
-    void testExportOrdersInvalidPath_Path01() {
+    void testExportOrdersInvalidPath_Path01() throws IOException {
         // Setup
         OrderItem item1 = new OrderItem(products.get(0), 2);
         List<OrderItem> items = Arrays.asList(item1);
@@ -52,8 +52,12 @@ class CsvExporterTest {
             new Order(101, items, totalPrice)
         );
 
-        // Invalid path: restricted directory
-        String invalidPath = "C:\\invalid_path_that_does_not_exist\\orders.csv";
+        // Create a read-only directory (works on both Windows and Linux)
+        Path readOnlyDir = tempDir.resolve("readonly");
+        Files.createDirectories(readOnlyDir);
+        readOnlyDir.toFile().setReadOnly();
+        
+        String invalidPath = readOnlyDir.resolve("orders.csv").toString();
 
         // Execute & Verify
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
