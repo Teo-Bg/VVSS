@@ -8,10 +8,7 @@ import drinkshop.service.validator.StocValidator;
 import drinkshop.service.validator.ValidationException;
 import org.junit.jupiter.api.*;
 
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StocServiceLevel1RepoIntTest {
@@ -25,20 +22,13 @@ public class StocServiceLevel1RepoIntTest {
     void setUp() {
         stocValidator = new StocValidator();//deja integrat
         stocRepo = new FileStocRepository("data/stocuri.txt"); // integram primul nivel (top down breadth first)
-        stoc = mock(Stoc.class);
+        stoc = new Stoc(1, "TestStoc", 50.0, 10.0);  // Use real Stoc instead of mock
         stocService = new StocService(stocRepo);
     }
 
     @Test
     @Order(1)
     void testAddValid_withRealRepo() {
-        //simulam o adaugare valida cu Stoc s = new Stoc(1, "Apa", 5, 1);
-        //asociem comportamentul pentru obiectul mock stoc
-        when(stoc.getId()).thenReturn(1);
-        when(stoc.getIngredient()).thenReturn("Apa");
-        when(stoc.getCantitate()).thenReturn(5.00);
-        when(stoc.getStocMinim()).thenReturn(1.00);
-
         //apelam (metoda add) si evaluam apelul (cu fail)
         try{
             stocService.add(stoc);
@@ -46,24 +36,28 @@ public class StocServiceLevel1RepoIntTest {
             fail("Invalid add operation " + e);
         }
 
-        // verificam interactiunea doar cu obiectul mock ramas, i.e., stoc
-        verify(stoc, times(3)).getCantitate();//apelat de 3 ori, la validare simpla, la comparatie cu stocul minim, la salvare in fisier
-
+        // Verify the stock was added to repository
+        Stoc retrievedStoc = stocRepo.findOne(stoc.getId());
+        assertNotNull(retrievedStoc);
+        assertEquals("TestStoc", retrievedStoc.getIngredient());
+        assertEquals(50.0, retrievedStoc.getCantitate());
+        assertEquals(10.0, retrievedStoc.getStocMinim());
     }
 
     @Test
     @Order(2)
     void testAddInvalid_withRealRepo() {
-        //asociem comportamente obiectelor mock
-        when(stoc.getId()).thenReturn(-1);
+        //Create invalid stock with negative ID
+        Stoc invalidStoc = new Stoc(-1, "Invalid", 50.0, 10.0);
 
         //apelam metoda si invalidarea obiectului
         Assertions.assertThrows(ValidationException.class, () -> {
-            stocService.add(stoc);
+            stocService.add(invalidStoc);
         });
 
-        //verificam interactiunea cu obiectele mock ramase, i.e., stoc
-        verify(stoc, times(1)).getId();
+        //Verify it was not saved
+        Stoc notFound = stocRepo.findOne(-1);
+        assertNull(notFound, "Invalid stock should not be saved");
     }
 
     @Test

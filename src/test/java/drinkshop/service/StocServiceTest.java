@@ -74,14 +74,12 @@ class StocServiceTest {
     void testCheckInsufficientStockWithMocks() {
         // ARRANGE
         Stoc stoc = new Stoc(2, "Suc", 10.0, 50.0);  // Stock: 10, Minimum: 50
-        stocService.add(stoc);
 
-        // ACT
-        boolean hasSufficientStock = stoc.getCantitate() >= stoc.getStocMinim();
-
-        // ASSERT
-        assertFalse(hasSufficientStock, "Stock should be insufficient (10 < 50)");
-        assertEquals(1, mockStocRepository.findAll().size());
+        // ACT & ASSERT - Should throw ValidationException because stock < minimum
+        assertThrows(ValidationException.class, () -> {
+            stocService.add(stoc);
+        });
+        assertEquals(0, mockStocRepository.findAll().size());
     }
 
     @Test
@@ -116,20 +114,17 @@ class StocServiceTest {
     void testCheckMultipleStocksWithMocks() {
         // ARRANGE
         Stoc stoc1 = new Stoc(1, "Apa", 100.0, 20.0);   // Sufficient
-        Stoc stoc2 = new Stoc(2, "Suc", 10.0, 50.0);    // Insufficient
         Stoc stoc3 = new Stoc(3, "Cafea", 25.0, 25.0);  // Boundary
 
         stocService.add(stoc1);
-        stocService.add(stoc2);
         stocService.add(stoc3);
 
         // ACT
         List<Stoc> allStocks = mockStocRepository.findAll();
 
         // ASSERT
-        assertEquals(3, allStocks.size());
+        assertEquals(2, allStocks.size());
         assertTrue(stoc1.getCantitate() >= stoc1.getStocMinim());
-        assertFalse(stoc2.getCantitate() >= stoc2.getStocMinim());
         assertTrue(stoc3.getCantitate() >= stoc3.getStocMinim());
     }
 

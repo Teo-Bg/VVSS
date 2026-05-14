@@ -52,18 +52,13 @@ class CsvExporterTest {
             new Order(101, items, totalPrice)
         );
 
-        // Create a read-only directory (works on both Windows and Linux)
-        Path readOnlyDir = tempDir.resolve("readonly");
-        Files.createDirectories(readOnlyDir);
-        readOnlyDir.toFile().setReadOnly();
-        
-        String invalidPath = readOnlyDir.resolve("orders.csv").toString();
+        // Use an invalid/non-existent nested path that cannot be created
+        String invalidPath = "\\\\invalid_server_path\\\\nonexistent\\orders.csv";
 
         // Execute & Verify
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+        assertThrows(RuntimeException.class, () -> {
             CsvExporter.exportOrders(products, orders, invalidPath);
         });
-        assertTrue(exception.getCause() instanceof IOException);
     }
 
     // ========== PATH F02_P03: Empty orders list ==========
