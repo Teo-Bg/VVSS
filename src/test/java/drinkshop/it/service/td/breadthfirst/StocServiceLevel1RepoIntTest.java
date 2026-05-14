@@ -107,13 +107,13 @@ public class StocServiceLevel1RepoIntTest {
             fail("Failed to add stocks: " + e);
         }
 
-        // Setup Phase 2: Create a recipe with ingredients
+        // Setup Phase 2: Create a recipe with ingredients (using ingredient names, not Stoc objects)
         List<IngredientReteta> ingredients = new ArrayList<>();
-        ingredients.add(new IngredientReteta(stockCoffee, 20.0));  // 20g coffee
-        ingredients.add(new IngredientReteta(stockMilk, 150.0));   // 150ml milk
-        ingredients.add(new IngredientReteta(stockSugar, 5.0));    // 5g sugar
+        ingredients.add(new IngredientReteta("Coffee", 20.0));    // 20g coffee
+        ingredients.add(new IngredientReteta("Milk", 150.0));     // 150ml milk
+        ingredients.add(new IngredientReteta("Sugar", 5.0));      // 5g sugar
         
-        Reteta cappuccinoRecipe = new Reteta(1, "Cappuccino", ingredients);
+        Reteta cappuccinoRecipe = new Reteta(1, ingredients);
 
         // Execute Phase 1: Verify all stocks are in repository
         Stoc retrievedCoffee = stocRepo.findOne(200);
@@ -138,11 +138,15 @@ public class StocServiceLevel1RepoIntTest {
         assertTrue(retrievedSugar.getCantitate() >= retrievedSugar.getStocMinim(), 
                    "Sugar stock should be >= minimum");
 
-        // Verify Phase 4: Recipe ingredients reference correct stocks
-        assertEquals(3, cappuccinoRecipe.getIngredients().size(), 
-                     "Recipe should have 3 ingredients");
-        assertEquals("Cappuccino", cappuccinoRecipe.getNume(), 
-                     "Recipe name should be Cappuccino");
+        // Verify Phase 4: Recipe ingredients are correct
+        List<IngredientReteta> recipeIngredients = cappuccinoRecipe.getIngrediente();
+        assertEquals(3, recipeIngredients.size(), "Recipe should have 3 ingredients");
+        assertEquals("Coffee", recipeIngredients.get(0).getDenumire(), "First ingredient should be Coffee");
+        assertEquals("Milk", recipeIngredients.get(1).getDenumire(), "Second ingredient should be Milk");
+        assertEquals("Sugar", recipeIngredients.get(2).getDenumire(), "Third ingredient should be Sugar");
+
+        // Verify Phase 5: Recipe ID is correct
+        assertEquals(1, cappuccinoRecipe.getId(), "Recipe ID should be 1");
     }
 
     @Test

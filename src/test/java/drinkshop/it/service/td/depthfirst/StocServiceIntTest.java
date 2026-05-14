@@ -9,6 +9,9 @@ import drinkshop.service.validator.ValidationException;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -30,7 +33,7 @@ public class StocServiceIntTest {
     @Test
     @Order(1)
     void testAddValid_withRealRepo() {
-        Stoc stoc = new Stoc(1, "Apa", 5.0, 1.0);
+        Stoc stoc = new Stoc(100, "Apa", 5.0, 1.0);
 
         //apelam metoda add si evaluam apelul cu fail
         try{
@@ -39,8 +42,12 @@ public class StocServiceIntTest {
             fail("Invalid add operation " + e);
         }
 
-        assert 10 == stocRepo.findAll().size();
-        assert 10 == stocService.getAll().size();
+        // Verify the stock was added
+        Stoc retrievedStoc = stocRepo.findOne(100);
+        assertNotNull(retrievedStoc, "Stock should be found in repository after adding");
+        assertEquals("Apa", retrievedStoc.getIngredient());
+        assertEquals(5.0, retrievedStoc.getCantitate());
+        assertEquals(1.0, retrievedStoc.getStocMinim());
     }
 
     @Test
@@ -53,8 +60,9 @@ public class StocServiceIntTest {
             stocService.add(stoc);
         });
 
-        assert 10 == stocRepo.findAll().size();
-        assert 10 == stocService.getAll().size();
+        // Verify invalid stock was not added
+        Stoc notFound = stocRepo.findOne(-1);
+        assertNull(notFound, "Invalid stock should not be saved");
     }
 
     @Test
