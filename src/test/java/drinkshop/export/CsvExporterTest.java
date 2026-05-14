@@ -52,8 +52,10 @@ class CsvExporterTest {
             new Order(101, items, totalPrice)
         );
 
-        // Use an invalid/non-existent nested path that cannot be created
-        String invalidPath = "\\\\invalid_server_path\\\\nonexistent\\orders.csv";
+        // Create a file and try to write to a path inside it (file as directory) - fails on all platforms
+        java.nio.file.Path blockerFile = tempDir.resolve("blocker.txt");
+        java.nio.file.Files.write(blockerFile, "content".getBytes());
+        String invalidPath = blockerFile + java.io.File.separator + "nested" + java.io.File.separator + "orders.csv";
 
         // Execute & Verify
         assertThrows(RuntimeException.class, () -> {
